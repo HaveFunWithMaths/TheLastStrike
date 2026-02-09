@@ -276,6 +276,31 @@ body {
     box-shadow: 0 0 15px var(--player1-glow);
 }
 
+/* Name Input */
+.name-input {
+    width: 140px;
+    height: 36px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--text-muted);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    text-align: center;
+    text-transform: uppercase;
+    outline: none;
+    transition: all var(--transition-fast);
+}
+
+.name-input::placeholder {
+    color: var(--text-muted);
+}
+
+.name-input:focus {
+    border-color: var(--player1-color);
+    box-shadow: 0 0 15px var(--player1-glow);
+}
+
 /* Mode Selector */
 .mode-selector {
     display: flex;
@@ -395,17 +420,33 @@ body {
     text-shadow: 0 0 20px var(--player2-glow);
 }
 
+/* Sticks Box (turn indicator border) */
+.sticks-box {
+    width: 100%;
+    max-width: 750px;
+    background: var(--bg-secondary);
+    border: 3px solid var(--current-color);
+    border-radius: 16px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 30px var(--current-glow), inset 0 0 20px rgba(0, 0, 0, 0.3);
+    transition: all var(--transition-normal);
+}
+
+.sticks-box.player2 {
+    border-color: var(--player2-color);
+    box-shadow: 0 0 30px var(--player2-glow), inset 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
 /* Sticks Container - Grid Layout */
 .sticks-container {
     width: 100%;
-    max-width: 700px;
     display: grid;
     grid-template-columns: repeat(var(--grid-cols, 3), auto);
     justify-content: center;
     justify-items: center;
     gap: var(--group-gap);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    padding: 0.5rem;
 }
 
 /* Stick Group (5 sticks) */

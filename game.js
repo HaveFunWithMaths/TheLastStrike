@@ -29,15 +29,19 @@ const GameMode = {
 
 const state = {
     // Configuration
-    totalSticks: 20,
+    totalSticks: 30,
     maxMove: 3,
     minMove: 1, // Fixed at 1
     mode: GameMode.PVAI,
 
+    // Player names
+    player1Name: 'PLAYER 1',
+    player2Name: 'PLAYER 2',
+
     // Runtime
     phase: GamePhase.CONFIG,
     currentPlayer: PlayerTurn.PLAYER1,
-    remainingSticks: 20,
+    remainingSticks: 30,
 
     // Interaction
     highlightedCount: 0,
@@ -57,9 +61,12 @@ const state = {
 const dom = {
     configPanel: document.getElementById('configPanel'),
     gameArena: document.getElementById('gameArena'),
+    sticksBox: document.getElementById('sticksBox'),
     sticksContainer: document.getElementById('sticksContainer'),
     totalSticksInput: document.getElementById('totalSticksInput'),
     maxMoveInput: document.getElementById('maxMoveInput'),
+    player1NameInput: document.getElementById('player1Name'),
+    player2NameInput: document.getElementById('player2Name'),
     remainingValue: document.getElementById('remainingValue'),
     turnPlayer: document.getElementById('turnPlayer'),
     ambientGlow: document.getElementById('ambientGlow'),
@@ -212,6 +219,10 @@ function calculateGridLayout(totalSticks) {
 function startGame() {
     validateInputs();
 
+    // Get player names
+    state.player1Name = dom.player1NameInput.value.trim().toUpperCase() || 'PLAYER 1';
+    state.player2Name = dom.player2NameInput.value.trim().toUpperCase() || (state.mode === GameMode.PVAI ? 'AI' : 'PLAYER 2');
+
     state.phase = GamePhase.PLAYING;
     state.remainingSticks = state.totalSticks;
     state.currentPlayer = PlayerTurn.PLAYER1;
@@ -256,14 +267,14 @@ function resetToConfig() {
     dom.gameArena.classList.remove('active');
     dom.configPanel.classList.remove('hidden');
     dom.ambientGlow.classList.remove('player2');
+    dom.sticksBox.classList.remove('player2');
 }
 
 function endGame(winner) {
     state.phase = GamePhase.GAME_OVER;
 
     const isPlayer2 = winner === PlayerTurn.PLAYER2;
-    const winnerName = state.mode === GameMode.PVAI && isPlayer2 ? 'AI' :
-        (isPlayer2 ? 'PLAYER 2' : 'PLAYER 1');
+    const winnerName = isPlayer2 ? state.player2Name : state.player1Name;
 
     dom.winnerText.textContent = `${winnerName} WINS`;
     dom.winnerText.classList.toggle('player2', isPlayer2);
@@ -288,12 +299,12 @@ function switchTurn() {
 
 function updateTurnIndicator() {
     const isPlayer2 = state.currentPlayer === PlayerTurn.PLAYER2;
-    const playerName = state.mode === GameMode.PVAI && isPlayer2 ? 'AI' :
-        (isPlayer2 ? 'PLAYER 2' : 'PLAYER 1');
+    const playerName = isPlayer2 ? state.player2Name : state.player1Name;
 
     dom.turnPlayer.textContent = playerName;
     dom.turnPlayer.classList.toggle('player2', isPlayer2);
     dom.ambientGlow.classList.toggle('player2', isPlayer2);
+    dom.sticksBox.classList.toggle('player2', isPlayer2);
 
     // Update CSS custom property for current color
     document.documentElement.style.setProperty('--current-color',
@@ -402,14 +413,15 @@ function handleStickHover(index) {
     if (state.phase !== GamePhase.PLAYING || state.isAnimating) return;
     if (state.mode === GameMode.PVAI && state.currentPlayer === PlayerTurn.PLAYER2) return;
 
-    // Count how many sticks from start to this index (inclusive) are still active
-    let count = 0;
+    // Find the position of this stick among active sticks (1-indexed)
+    let positionInActive = 0;
     for (let i = 0; i <= index && i < state.sticks.length; i++) {
-        if (state.sticks[i]) count++;
+        if (state.sticks[i]) positionInActive++;
     }
 
-    // Clamp to maxMove
-    const highlightCount = Math.min(count, state.maxMove);
+    // If hovering beyond maxMove, only highlight maxMove sticks
+    // positionInActive is effectively "how many sticks from start to here"
+    const highlightCount = Math.min(positionInActive, state.maxMove);
     highlightSticks(highlightCount);
 }
 
