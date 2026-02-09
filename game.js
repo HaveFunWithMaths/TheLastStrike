@@ -417,13 +417,18 @@ function undoMove() {
     if (state.historyIndex <= 0 || state.isAnimating) return;
     if (state.phase !== GamePhase.PLAYING) return;
 
+    // In PvAI mode, undo is only allowed during player's turn
+    if (state.mode === GameMode.PVAI && state.currentPlayer === PlayerTurn.PLAYER2) return;
+
     AudioSystem.play('undo');
     VFX.hapticFeedback('medium');
 
-    // In PvAI mode, undo twice (player + AI)
+    // In PvAI mode, undo twice (player's last move + AI's last move)
+    // This brings the game back to player's previous turn state
     if (state.mode === GameMode.PVAI && state.historyIndex >= 2) {
         state.historyIndex -= 2;
     } else {
+        // In PvP mode, just undo one move (which was the other player's move)
         state.historyIndex--;
     }
 
@@ -435,6 +440,9 @@ function redoMove() {
     if (state.historyIndex >= state.history.length - 1 || state.isAnimating) return;
     if (state.phase !== GamePhase.PLAYING) return;
 
+    // In PvAI mode, redo is only allowed during player's turn
+    if (state.mode === GameMode.PVAI && state.currentPlayer === PlayerTurn.PLAYER2) return;
+
     AudioSystem.play('redo');
     VFX.hapticFeedback('medium');
 
@@ -442,6 +450,7 @@ function redoMove() {
     if (state.mode === GameMode.PVAI && state.historyIndex < state.history.length - 2) {
         state.historyIndex += 2;
     } else {
+        // In PvP mode, just redo one move
         state.historyIndex++;
     }
 
@@ -460,8 +469,21 @@ function restoreState(snapshot) {
 }
 
 function updateUndoRedoButtons() {
-    const canUndo = state.historyIndex > 0 && state.phase === GamePhase.PLAYING;
-    const canRedo = state.historyIndex < state.history.length - 1 && state.phase === GamePhase.PLAYING;
+    // Base conditions for undo/redo availability
+    let canUndo = state.historyIndex > 0 && state.phase === GamePhase.PLAYING;
+    let canRedo = state.historyIndex < state.history.length - 1 && state.phase === GamePhase.PLAYING;
+
+    // In PvAI mode, disable undo/redo during AI's turn
+    if (state.mode === GameMode.PVAI && state.currentPlayer === PlayerTurn.PLAYER2) {
+        canUndo = false;
+        canRedo = false;
+    }
+
+    // In PvAI mode, need at least 2 history entries to undo (player + AI moves)
+    if (state.mode === GameMode.PVAI && state.historyIndex < 2) {
+        canUndo = false;
+    }
+
     dom.undoBtn.disabled = !canUndo;
     dom.redoBtn.disabled = !canRedo;
 }
@@ -588,6 +610,7 @@ function switchTurn() {
     state.currentPlayer = state.currentPlayer === PlayerTurn.PLAYER1
         ? PlayerTurn.PLAYER2 : PlayerTurn.PLAYER1;
     updateTurnIndicator();
+    updateUndoRedoButtons();
     if (state.mode === GameMode.PVAI && state.currentPlayer === PlayerTurn.PLAYER2) {
         setTimeout(executeAIMove, 500);
     }
@@ -853,8 +876,8 @@ function strikeSticks(indices) {
         } else {
             state.isAnimating = false;
             clearHighlights();
-            saveState();
             switchTurn();
+            saveState();
             updateStickStates();
         }
     }, 150 + indices.length * 30);
