@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Last Strike</title>
+    <meta name="description"
+        content="A neon-noir strategy game where the player who takes the last stick wins. Challenge the perfect AI opponent.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Ambient Background -->
+    <div class="ambient-glow" id="ambientGlow"></div>
+
+    <!-- Main Game Container -->
+    <div class="game-container">
+        <!-- Header -->
+        <header class="game-header">
+            <h1 class="game-title">THE LAST STRIKE</h1>
+            <p class="game-subtitle">Take the last stick to win</p>
+        </header>
+
+        <!-- Configuration Panel -->
+        <div class="config-panel" id="configPanel">
+            <!-- Instructions Section -->
+            <div class="instructions-section">
+                <h2 class="instructions-title">HOW TO PLAY</h2>
+                <div class="instructions-content">
+                    <div class="instruction-item">
+                        <span class="instruction-number">1</span>
+                        <p>Set the <strong>total sticks (N)</strong> and <strong>max strike (M)</strong></p>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-number">2</span>
+                        <p><strong>Hover</strong> over sticks to select how many to take (1 to M)</p>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-number">3</span>
+                        <p><strong>Click</strong> to strike the highlighted sticks</p>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-number">4</span>
+                        <p>The player who strikes the <strong>last stick WINS!</strong></p>
+                    </div>
+                </div>
+                <p class="instruction-tip">💡 <em>Tip: The AI plays perfectly. Can you find the winning strategy?</em>
+                </p>
+            </div>
+
+            <!-- Divider -->
+            <div class="config-divider"></div>
+
+            <!-- Configuration Controls -->
+            <div class="config-row">
+                <div class="config-item">
+                    <label for="totalSticksInput">STICKS (N)</label>
+                    <div class="config-control">
+                        <button class="config-btn" data-action="decrease" data-target="totalSticks">−</button>
+                        <input type="number" class="config-input" id="totalSticksInput" value="20" min="5" max="100">
+                        <button class="config-btn" data-action="increase" data-target="totalSticks">+</button>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label for="maxMoveInput">MAX STRIKE (M)</label>
+                    <div class="config-control">
+                        <button class="config-btn" data-action="decrease" data-target="maxMove">−</button>
+                        <input type="number" class="config-input" id="maxMoveInput" value="3" min="2" max="10">
+                        <button class="config-btn" data-action="increase" data-target="maxMove">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="pvai">VS AI</button>
+                <button class="mode-btn" data-mode="pvp">VS PLAYER</button>
+            </div>
+            <button class="start-btn" id="startBtn">INITIATE</button>
+        </div>
+
+        <!-- Game Arena -->
+        <div class="game-arena" id="gameArena">
+            <!-- Turn Indicator -->
+            <div class="turn-indicator" id="turnIndicator">
+                <span class="turn-label">TURN</span>
+                <span class="turn-player" id="turnPlayer">PLAYER 1</span>
+            </div>
+
+            <!-- Sticks Container -->
+            <div class="sticks-container" id="sticksContainer">
+                <!-- Sticks will be rendered as divs here -->
+            </div>
+
+            <!-- Remaining Counter -->
+            <div class="remaining-counter">
+                <span class="remaining-label">REMAINING</span>
+                <span class="remaining-value" id="remainingValue">20</span>
+            </div>
+
+            <!-- Game Controls -->
+            <div class="game-controls">
+                <button class="control-btn" id="homeBtn">HOME</button>
+                <button class="control-btn" id="resetBtn">RESET</button>
+            </div>
+        </div>
+
+        <!-- Game Over Overlay -->
+        <div class="game-over-overlay" id="gameOverOverlay">
+            <div class="game-over-content">
+                <h2 class="winner-text" id="winnerText">PLAYER 1 WINS</h2>
+                <p class="game-over-subtitle">The last strike was decisive</p>
+                <button class="play-again-btn" id="playAgainBtn">PLAY AGAIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slash Effect Layer -->
+    <svg class="slash-overlay" id="slashOverlay">
+        <defs>
+            <linearGradient id="slashGradientCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#00f5ff;stop-opacity:0" />
+                <stop offset="50%" style="stop-color:#00f5ff;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#00f5ff;stop-opacity:0" />
+            </linearGradient>
+            <linearGradient id="slashGradientPink" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#ff006e;stop-opacity:0" />
+                <stop offset="50%" style="stop-color:#ff006e;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#ff006e;stop-opacity:0" />
+            </linearGradient>
+            <filter id="slashGlow">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+
+    <script src="game.js"></script>
+</body>
+
+</html>

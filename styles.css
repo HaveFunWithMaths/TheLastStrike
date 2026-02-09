@@ -1,0 +1,737 @@
+/* =============================================
+   THE LAST STRIKE - Neon-Noir Strategy Game
+   Theme: Cyber-Chalk on Matte Black
+   ============================================= */
+
+/* CSS Custom Properties */
+:root {
+    /* Colors */
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-tertiary: #1a1a24;
+
+    --player1-color: #00f5ff;
+    --player1-glow: rgba(0, 245, 255, 0.4);
+    --player1-bg: rgba(0, 245, 255, 0.05);
+
+    --player2-color: #ff006e;
+    --player2-glow: rgba(255, 0, 110, 0.4);
+    --player2-bg: rgba(255, 0, 110, 0.05);
+
+    --text-primary: #ffffff;
+    --text-secondary: #888899;
+    --text-muted: #555566;
+
+    --stick-color: #e8e8f0;
+    --stick-chalk: #d4d4e0;
+
+    /* Typography */
+    --font-mono: 'Roboto Mono', 'Courier New', monospace;
+
+    /* Sizing */
+    --stick-width: 3px;
+    --stick-height: 60px;
+    --stick-gap: 8px;
+    --group-gap: 24px;
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+
+    /* Current player (dynamic) */
+    --current-color: var(--player1-color);
+    --current-glow: var(--player1-glow);
+    --current-bg: var(--player1-bg);
+}
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-mono);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Ambient Glow Background */
+.ambient-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+    transition: background var(--transition-slow);
+    background: radial-gradient(ellipse at 50% 0%, var(--current-bg) 0%, transparent 60%),
+        radial-gradient(ellipse at 0% 100%, rgba(0, 245, 255, 0.02) 0%, transparent 40%),
+        radial-gradient(ellipse at 100% 100%, rgba(255, 0, 110, 0.02) 0%, transparent 40%);
+}
+
+.ambient-glow.player2 {
+    --current-bg: var(--player2-bg);
+}
+
+/* Game Container */
+.game-container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.game-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.game-title {
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    background: linear-gradient(135deg, var(--player1-color), var(--player2-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 60px var(--player1-glow);
+    margin-bottom: 0.25rem;
+}
+
+.game-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+/* Configuration Panel */
+.config-panel {
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Instructions Section */
+.instructions-section {
+    margin-bottom: 1.25rem;
+}
+
+.instructions-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--player1-color);
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.instructions-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: var(--bg-tertiary);
+    padding: 0.75rem;
+    border-radius: 8px;
+}
+
+.instruction-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    background: var(--player1-color);
+    color: var(--bg-primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50%;
+}
+
+.instruction-item p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.instruction-item strong {
+    color: var(--text-primary);
+}
+
+.instruction-tip {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+}
+
+/* Config Divider */
+.config-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--bg-tertiary), transparent);
+    margin: 1.25rem 0;
+}
+
+.config-row {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.config-item {
+    text-align: center;
+}
+
+.config-item label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+}
+
+.config-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.config-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--text-muted);
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-family: var(--font-mono);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.config-btn:hover {
+    border-color: var(--player1-color);
+    color: var(--player1-color);
+    box-shadow: 0 0 15px var(--player1-glow);
+}
+
+.config-btn:active {
+    transform: scale(0.95);
+}
+
+/* Typeable Input */
+.config-input {
+    width: 60px;
+    height: 36px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--text-muted);
+    border-radius: 6px;
+    color: var(--player1-color);
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+    transition: all var(--transition-fast);
+    -moz-appearance: textfield;
+}
+
+.config-input::-webkit-outer-spin-button,
+.config-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.config-input:focus {
+    border-color: var(--player1-color);
+    box-shadow: 0 0 15px var(--player1-glow);
+}
+
+/* Mode Selector */
+.mode-selector {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.mode-btn {
+    padding: 0.6rem 1.25rem;
+    border: 1px solid var(--text-muted);
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.mode-btn:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+}
+
+.mode-btn.active {
+    border-color: var(--player1-color);
+    background: var(--player1-bg);
+    color: var(--player1-color);
+    box-shadow: 0 0 15px var(--player1-glow);
+}
+
+/* Start Button */
+.start-btn {
+    display: block;
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+    padding: 0.875rem 1.5rem;
+    border: 2px solid var(--player1-color);
+    background: transparent;
+    color: var(--player1-color);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.start-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--player1-glow), transparent);
+    transition: left 0.5s ease;
+}
+
+.start-btn:hover::before {
+    left: 100%;
+}
+
+.start-btn:hover {
+    background: var(--player1-bg);
+    box-shadow: 0 0 25px var(--player1-glow);
+    transform: translateY(-2px);
+}
+
+.start-btn:active {
+    transform: translateY(0);
+}
+
+/* Game Arena */
+.game-arena {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.game-arena.active {
+    display: flex;
+}
+
+/* Turn Indicator */
+.turn-indicator {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.turn-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.25rem;
+}
+
+.turn-player {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--current-color);
+    text-shadow: 0 0 20px var(--current-glow);
+    transition: all var(--transition-normal);
+}
+
+.turn-player.player2 {
+    color: var(--player2-color);
+    text-shadow: 0 0 20px var(--player2-glow);
+}
+
+/* Sticks Container - Grid Layout */
+.sticks-container {
+    width: 100%;
+    max-width: 700px;
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols, 3), auto);
+    justify-content: center;
+    justify-items: center;
+    gap: var(--group-gap);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Stick Group (5 sticks) */
+.stick-group {
+    display: flex;
+    gap: var(--stick-gap);
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all var(--transition-fast);
+}
+
+/* Individual Stick */
+.stick {
+    width: var(--stick-width);
+    height: var(--stick-height);
+    background: var(--stick-color);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+.stick:hover {
+    background: var(--current-color);
+    box-shadow: 0 0 12px var(--current-glow);
+}
+
+.stick.highlighted {
+    background: var(--current-color);
+    box-shadow: 0 0 16px var(--current-glow);
+    transform: scaleY(1.05);
+}
+
+.stick.highlighted.player2 {
+    background: var(--player2-color);
+    box-shadow: 0 0 16px var(--player2-glow);
+}
+
+.stick.struck {
+    animation: stickFade 0.4s ease forwards;
+    pointer-events: none;
+}
+
+@keyframes stickFade {
+    0% {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scaleY(0.8);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scaleY(0);
+    }
+}
+
+.stick.disabled {
+    background: var(--text-muted);
+    opacity: 0.2;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Remaining Counter */
+.remaining-counter {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.remaining-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.25rem;
+}
+
+.remaining-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.control-btn {
+    padding: 0.6rem 1.5rem;
+    border: 1px solid var(--text-muted);
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.control-btn:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+}
+
+/* Game Over Overlay */
+.game-over-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 10, 15, 0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+}
+
+.game-over-overlay.active {
+    display: flex;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.game-over-content {
+    text-align: center;
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.winner-text {
+    font-size: clamp(1.5rem, 6vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, var(--player1-color), #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.winner-text.player2 {
+    background: linear-gradient(135deg, var(--player2-color), #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.game-over-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+}
+
+.play-again-btn {
+    padding: 0.875rem 2.5rem;
+    border: 2px solid var(--player1-color);
+    background: transparent;
+    color: var(--player1-color);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.play-again-btn:hover {
+    background: var(--player1-bg);
+    box-shadow: 0 0 25px var(--player1-glow);
+}
+
+/* Slash Overlay */
+.slash-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 50;
+}
+
+.slash-line {
+    stroke-width: 6;
+    stroke-linecap: round;
+    fill: none;
+    filter: url(#slashGlow);
+}
+
+.slash-line.animate {
+    animation: slashDraw 0.3s ease-out forwards;
+}
+
+@keyframes slashDraw {
+    0% {
+        stroke-dashoffset: 1000;
+        opacity: 1;
+    }
+
+    70% {
+        opacity: 1;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    :root {
+        --stick-height: 50px;
+        --stick-gap: 6px;
+        --group-gap: 16px;
+    }
+
+    .game-container {
+        padding: 1rem 0.75rem;
+    }
+
+    .config-panel {
+        padding: 1rem;
+    }
+
+    .instructions-content {
+        grid-template-columns: 1fr;
+    }
+
+    .instruction-item {
+        padding: 0.6rem;
+    }
+
+    .instruction-item p {
+        font-size: 0.75rem;
+    }
+
+    .config-row {
+        gap: 1.5rem;
+    }
+
+    .config-input {
+        width: 50px;
+        height: 32px;
+        font-size: 1rem;
+    }
+
+    .config-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
+    }
+
+    .mode-selector {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .mode-btn {
+        width: 100%;
+        max-width: 180px;
+    }
+
+    .remaining-value {
+        font-size: 2rem;
+    }
+
+    .sticks-container {
+        padding: 1rem;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 400px) {
+    :root {
+        --stick-height: 45px;
+        --stick-width: 2px;
+        --stick-gap: 5px;
+        --group-gap: 12px;
+    }
+
+    .game-title {
+        letter-spacing: 0.1em;
+    }
+
+    .config-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
