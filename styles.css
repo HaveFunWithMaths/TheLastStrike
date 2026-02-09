@@ -1,7 +1,11 @@
 /* =============================================
    THE LAST STRIKE - Neon-Noir Strategy Game
    Theme: Cyber-Chalk on Matte Black
+   Enhanced Edition with Premium Aesthetics
    ============================================= */
+
+/* Import Premium Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Roboto+Mono:wght@400;500;700&display=swap');
 
 /* CSS Custom Properties */
 :root {
@@ -26,6 +30,7 @@
     --stick-chalk: #d4d4e0;
 
     /* Typography */
+    --font-display: 'Orbitron', sans-serif;
     --font-mono: 'Roboto Mono', 'Courier New', monospace;
 
     /* Sizing */
@@ -67,7 +72,129 @@ body {
     position: relative;
 }
 
-/* Ambient Glow Background */
+/* =============================================
+   ATMOSPHERIC BACKGROUND EFFECTS
+   ============================================= */
+
+/* Animated Grid Pattern Overlay */
+.grid-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.03;
+    background-image:
+        linear-gradient(var(--current-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--current-color) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridPulse 4s ease-in-out infinite;
+}
+
+@keyframes gridPulse {
+
+    0%,
+    100% {
+        opacity: 0.02;
+    }
+
+    50% {
+        opacity: 0.05;
+    }
+}
+
+/* Noise Texture Overlay */
+.noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.015;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Particle Container */
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--current-color);
+    border-radius: 50%;
+    opacity: 0;
+    animation: floatParticle 15s linear infinite;
+    box-shadow: 0 0 6px var(--current-glow);
+}
+
+@keyframes floatParticle {
+    0% {
+        opacity: 0;
+        transform: translateY(100vh) translateX(0);
+    }
+
+    10% {
+        opacity: 0.6;
+    }
+
+    90% {
+        opacity: 0.6;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-10vh) translateX(20px);
+    }
+}
+
+/* City Bokeh Effect */
+.bokeh-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.bokeh-dot {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(3px);
+    animation: bokehTwinkle 3s ease-in-out infinite;
+}
+
+@keyframes bokehTwinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: scale(1.2);
+    }
+}
+
+/* Ambient Glow Background - Enhanced with Pulsing */
 .ambient-glow {
     position: fixed;
     top: 0;
@@ -81,16 +208,100 @@ body {
     background: radial-gradient(ellipse at 50% 0%, var(--current-bg) 0%, transparent 60%),
         radial-gradient(ellipse at 0% 100%, rgba(0, 245, 255, 0.02) 0%, transparent 40%),
         radial-gradient(ellipse at 100% 100%, rgba(255, 0, 110, 0.02) 0%, transparent 40%);
+    animation: ambientPulse 3s ease-in-out infinite;
+}
+
+@keyframes ambientPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 .ambient-glow.player2 {
     --current-bg: var(--player2-bg);
 }
 
-/* Game Container */
+/* =============================================
+   SCANLINE CRT EFFECT
+   ============================================= */
+
+.scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.03;
+    background: repeating-linear-gradient(0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.3) 2px,
+            rgba(0, 0, 0, 0.3) 4px);
+}
+
+/* =============================================
+   SCREEN SHAKE EFFECT
+   ============================================= */
+
+.shake {
+    animation: screenShake 0.4s ease-out;
+}
+
+@keyframes screenShake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    10% {
+        transform: translateX(-5px) translateY(2px);
+    }
+
+    20% {
+        transform: translateX(5px) translateY(-2px);
+    }
+
+    30% {
+        transform: translateX(-4px) translateY(1px);
+    }
+
+    40% {
+        transform: translateX(4px) translateY(-1px);
+    }
+
+    50% {
+        transform: translateX(-2px);
+    }
+
+    60% {
+        transform: translateX(2px);
+    }
+
+    70% {
+        transform: translateX(-1px);
+    }
+
+    80% {
+        transform: translateX(1px);
+    }
+}
+
+/* =============================================
+   GAME CONTAINER
+   ============================================= */
+
 .game-container {
     position: relative;
-    z-index: 1;
+    z-index: 10;
     max-width: 900px;
     margin: 0 auto;
     padding: 1.5rem 1rem;
@@ -99,22 +310,83 @@ body {
     flex-direction: column;
 }
 
-/* Header */
+/* =============================================
+   HEADER WITH CRT TITLE EFFECT
+   ============================================= */
+
 .game-header {
     text-align: center;
     margin-bottom: 1.5rem;
 }
 
 .game-title {
+    font-family: var(--font-display);
     font-size: clamp(1.5rem, 5vw, 3rem);
-    font-weight: 700;
-    letter-spacing: 0.2em;
+    font-weight: 900;
+    letter-spacing: 0.15em;
     background: linear-gradient(135deg, var(--player1-color), var(--player2-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 0 60px var(--player1-glow);
     margin-bottom: 0.25rem;
+    position: relative;
+    animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+/* CRT Flicker Effect on Title */
+.game-title::before {
+    content: 'THE LAST STRIKE';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, var(--player1-color), var(--player2-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0.8;
+    animation: glitch 3s infinite;
+    clip-path: inset(0 0 0 0);
+}
+
+@keyframes titleGlow {
+    from {
+        filter: drop-shadow(0 0 20px var(--player1-glow));
+    }
+
+    to {
+        filter: drop-shadow(0 0 40px var(--player2-glow));
+    }
+}
+
+@keyframes glitch {
+
+    0%,
+    90%,
+    100% {
+        clip-path: inset(0 0 0 0);
+        transform: translate(0);
+    }
+
+    92% {
+        clip-path: inset(20% 0 40% 0);
+        transform: translate(-2px, 1px);
+    }
+
+    94% {
+        clip-path: inset(60% 0 10% 0);
+        transform: translate(2px, -1px);
+    }
+
+    96% {
+        clip-path: inset(30% 0 50% 0);
+        transform: translate(-1px, 2px);
+    }
+
+    98% {
+        clip-path: inset(70% 0 5% 0);
+        transform: translate(1px, -2px);
+    }
 }
 
 .game-subtitle {
@@ -124,13 +396,63 @@ body {
     text-transform: uppercase;
 }
 
-/* Configuration Panel */
+/* =============================================
+   SOUND TOGGLE BUTTON
+   ============================================= */
+
+.sound-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    width: 44px;
+    height: 44px;
+    border: 2px solid var(--text-muted);
+    background: var(--bg-secondary);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    transition: all var(--transition-fast);
+}
+
+.sound-toggle:hover {
+    border-color: var(--player1-color);
+    box-shadow: 0 0 15px var(--player1-glow);
+    transform: scale(1.1);
+}
+
+.sound-toggle.muted {
+    opacity: 0.5;
+}
+
+.sound-toggle.muted::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 24px;
+    background: var(--player2-color);
+    transform: rotate(45deg);
+    box-shadow: 0 0 8px var(--player2-glow);
+}
+
+/* =============================================
+   CONFIGURATION PANEL
+   ============================================= */
+
 .config-panel {
     background: var(--bg-secondary);
     border: 1px solid var(--bg-tertiary);
     border-radius: 12px;
     padding: 1.25rem;
     margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.config-panel.hidden {
+    display: none;
 }
 
 /* Instructions Section */
@@ -139,6 +461,7 @@ body {
 }
 
 .instructions-title {
+    font-family: var(--font-display);
     font-size: 0.875rem;
     font-weight: 700;
     color: var(--player1-color);
@@ -160,6 +483,12 @@ body {
     background: var(--bg-tertiary);
     padding: 0.75rem;
     border-radius: 8px;
+    transition: all var(--transition-fast);
+}
+
+.instruction-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
 
 .instruction-number {
@@ -307,6 +636,7 @@ body {
     justify-content: center;
     gap: 0.75rem;
     margin-bottom: 1.25rem;
+    flex-wrap: wrap;
 }
 
 .mode-btn {
@@ -334,6 +664,100 @@ body {
     box-shadow: 0 0 15px var(--player1-glow);
 }
 
+/* Misère Toggle */
+.misere-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    padding: 0.75rem;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+}
+
+.misere-toggle label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-primary);
+    border: 2px solid var(--text-muted);
+    border-radius: 26px;
+    transition: all var(--transition-fast);
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background: var(--text-secondary);
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+}
+
+.toggle-switch input:checked+.toggle-slider {
+    border-color: var(--player2-color);
+    background: var(--player2-bg);
+}
+
+.toggle-switch input:checked+.toggle-slider::before {
+    transform: translateX(24px);
+    background: var(--player2-color);
+    box-shadow: 0 0 10px var(--player2-glow);
+}
+
+.misere-warning {
+    font-size: 0.7rem;
+    color: var(--player2-color);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.misere-toggle.active .misere-warning {
+    opacity: 1;
+}
+
+/* Misère Description */
+.misere-description {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 0, 110, 0.05);
+    border: 1px dashed var(--player2-color);
+    border-radius: 6px;
+    opacity: 0.8;
+}
+
+.misere-description strong {
+    color: var(--player2-color);
+}
+
 /* Start Button */
 .start-btn {
     display: block;
@@ -344,7 +768,7 @@ body {
     border: 2px solid var(--player1-color);
     background: transparent;
     color: var(--player1-color);
-    font-family: var(--font-mono);
+    font-family: var(--font-display);
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 0.25em;
@@ -380,7 +804,10 @@ body {
     transform: translateY(0);
 }
 
-/* Game Arena */
+/* =============================================
+   GAME ARENA
+   ============================================= */
+
 .game-arena {
     display: none;
     flex-direction: column;
@@ -407,6 +834,7 @@ body {
 }
 
 .turn-player {
+    font-family: var(--font-display);
     font-size: 1.25rem;
     font-weight: 700;
     letter-spacing: 0.15em;
@@ -420,7 +848,26 @@ body {
     text-shadow: 0 0 20px var(--player2-glow);
 }
 
-/* Sticks Box (turn indicator border) */
+/* Game Mode Indicator */
+.game-mode-indicator {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+}
+
+.game-mode-indicator.misere {
+    color: var(--player2-color);
+    border: 1px solid var(--player2-color);
+}
+
+/* =============================================
+   STICKS BOX & CONTAINER
+   ============================================= */
+
 .sticks-box {
     width: 100%;
     max-width: 750px;
@@ -431,6 +878,8 @@ body {
     margin-bottom: 1.5rem;
     box-shadow: 0 0 30px var(--current-glow), inset 0 0 20px rgba(0, 0, 0, 0.3);
     transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
 }
 
 .sticks-box.player2 {
@@ -458,64 +907,84 @@ body {
     transition: all var(--transition-fast);
 }
 
-/* Individual Stick */
+/* Individual Stick with 3D Effect */
 .stick {
     width: var(--stick-width);
     height: var(--stick-height);
-    background: var(--stick-color);
+    background: linear-gradient(90deg, var(--stick-chalk), var(--stick-color), var(--stick-chalk));
     border-radius: 2px;
     cursor: pointer;
     transition: all var(--transition-fast);
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+    box-shadow:
+        2px 2px 4px rgba(0, 0, 0, 0.3),
+        0 0 4px rgba(255, 255, 255, 0.2);
+    transform: perspective(100px) rotateY(-2deg);
+    animation: stickIdle 3s ease-in-out infinite;
 }
 
-.stick:hover {
-    background: var(--current-color);
-    box-shadow: 0 0 12px var(--current-glow);
-}
+@keyframes stickIdle {
 
-.stick.highlighted {
-    background: var(--current-color);
-    box-shadow: 0 0 16px var(--current-glow);
-    transform: scaleY(1.05);
-}
-
-.stick.highlighted.player2 {
-    background: var(--player2-color);
-    box-shadow: 0 0 16px var(--player2-glow);
-}
-
-.stick.struck {
-    animation: stickFade 0.4s ease forwards;
-    pointer-events: none;
-}
-
-@keyframes stickFade {
-    0% {
-        opacity: 1;
-        transform: scaleY(1);
+    0%,
+    100% {
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 4px rgba(255, 255, 255, 0.2);
     }
 
     50% {
-        opacity: 0.5;
-        transform: scaleY(0.8);
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 8px rgba(255, 255, 255, 0.3);
+    }
+}
+
+.stick:hover {
+    background: linear-gradient(90deg, var(--current-color), var(--current-color));
+    box-shadow: 0 0 16px var(--current-glow);
+    transform: perspective(100px) rotateY(0deg) scaleY(1.05);
+}
+
+.stick.highlighted {
+    background: linear-gradient(90deg, var(--current-color), var(--current-color));
+    box-shadow: 0 0 20px var(--current-glow);
+    transform: perspective(100px) rotateY(0deg) scaleY(1.08);
+    animation: none;
+}
+
+.stick.highlighted.player2 {
+    background: linear-gradient(90deg, var(--player2-color), var(--player2-color));
+    box-shadow: 0 0 20px var(--player2-glow);
+}
+
+.stick.struck {
+    animation: stickExplode 0.5s ease forwards;
+    pointer-events: none;
+}
+
+@keyframes stickExplode {
+    0% {
+        opacity: 1;
+        transform: scaleY(1) scaleX(1);
+        filter: brightness(1);
+    }
+
+    30% {
+        opacity: 1;
+        transform: scaleY(1.2) scaleX(1.5);
+        filter: brightness(2);
+        box-shadow: 0 0 30px var(--current-glow);
     }
 
     100% {
         opacity: 0;
-        transform: scaleY(0);
+        transform: scaleY(0) scaleX(2);
+        filter: brightness(0);
     }
 }
 
-/* Locked/Invalid Sticks (beyond M) */
+/* Locked/Invalid Sticks */
 .stick.locked {
     opacity: 0.3;
     pointer-events: none;
     cursor: not-allowed;
-    stroke: var(--text-muted);
-    /* Fallback */
     background: var(--text-secondary);
-    /* Fallback for div */
+    animation: none;
 }
 
 .stick.disabled {
@@ -525,7 +994,70 @@ body {
     pointer-events: none;
 }
 
-/* Remaining Counter */
+/* =============================================
+   EXPLOSION PARTICLES
+   ============================================= */
+
+.explosion-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.explosion-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleExplode 0.6s ease-out forwards;
+}
+
+@keyframes particleExplode {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0);
+    }
+}
+
+/* Ripple Effect */
+.ripple {
+    position: absolute;
+    border: 2px solid var(--current-color);
+    border-radius: 50%;
+    animation: rippleExpand 0.6s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes rippleExpand {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+
+    100% {
+        width: 100px;
+        height: 100px;
+        opacity: 0;
+        margin-left: -50px;
+        margin-top: -50px;
+    }
+}
+
+/* =============================================
+   REMAINING COUNTER & CONTROLS
+   ============================================= */
+
 .remaining-counter {
     text-align: center;
     margin-bottom: 1.5rem;
@@ -540,10 +1072,29 @@ body {
 }
 
 .remaining-value {
+    font-family: var(--font-display);
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--text-primary);
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    transition: all var(--transition-fast);
+}
+
+.remaining-value.pulse {
+    animation: counterPulse 0.3s ease;
+}
+
+@keyframes counterPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+        color: var(--current-color);
+    }
 }
 
 /* Game Controls */
@@ -551,6 +1102,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .control-btn {
@@ -564,6 +1116,9 @@ body {
     border-radius: 6px;
     cursor: pointer;
     transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .control-btn:hover {
@@ -571,7 +1126,27 @@ body {
     color: var(--text-primary);
 }
 
-/* Game Over Overlay */
+.control-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.control-btn.undo-btn:hover:not(:disabled) {
+    border-color: var(--player1-color);
+    color: var(--player1-color);
+    box-shadow: 0 0 15px var(--player1-glow);
+}
+
+.control-btn.redo-btn:hover:not(:disabled) {
+    border-color: var(--player2-color);
+    color: var(--player2-color);
+    box-shadow: 0 0 15px var(--player2-glow);
+}
+
+/* =============================================
+   GAME OVER OVERLAY - ENHANCED
+   ============================================= */
+
 .game-over-overlay {
     position: fixed;
     top: 0;
@@ -582,7 +1157,7 @@ body {
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 1000;
     backdrop-filter: blur(10px);
     padding: 1rem;
 }
@@ -605,6 +1180,7 @@ body {
 .game-over-content {
     text-align: center;
     animation: slideUp 0.5s ease;
+    position: relative;
 }
 
 @keyframes slideUp {
@@ -619,15 +1195,64 @@ body {
     }
 }
 
+/* Trophy Icon */
+.trophy-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: trophyBounce 1s ease infinite;
+    filter: drop-shadow(0 0 20px var(--current-glow));
+}
+
+@keyframes trophyBounce {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-10px) scale(1.1);
+    }
+}
+
+/* Glitch Winner Text */
 .winner-text {
+    font-family: var(--font-display);
     font-size: clamp(1.5rem, 6vw, 3.5rem);
-    font-weight: 700;
+    font-weight: 900;
     letter-spacing: 0.15em;
     margin-bottom: 0.75rem;
     background: linear-gradient(135deg, var(--player1-color), #ffffff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    position: relative;
+    animation: winnerGlitch 2s infinite;
+}
+
+@keyframes winnerGlitch {
+
+    0%,
+    90%,
+    100% {
+        text-shadow: none;
+        transform: translate(0);
+    }
+
+    92% {
+        text-shadow: -2px 0 var(--player2-color), 2px 0 var(--player1-color);
+        transform: translate(2px, -1px);
+    }
+
+    94% {
+        text-shadow: 2px 0 var(--player1-color), -2px 0 var(--player2-color);
+        transform: translate(-2px, 1px);
+    }
+
+    96% {
+        text-shadow: -1px 0 var(--player2-color), 1px 0 var(--player1-color);
+        transform: translate(1px, 2px);
+    }
 }
 
 .winner-text.player2 {
@@ -649,7 +1274,7 @@ body {
     border: 2px solid var(--player1-color);
     background: transparent;
     color: var(--player1-color);
-    font-family: var(--font-mono);
+    font-family: var(--font-display);
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 0.15em;
@@ -661,9 +1286,48 @@ body {
 .play-again-btn:hover {
     background: var(--player1-bg);
     box-shadow: 0 0 25px var(--player1-glow);
+    transform: translateY(-2px);
 }
 
-/* Slash Overlay */
+/* =============================================
+   CONFETTI CELEBRATION
+   ============================================= */
+
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -20px;
+    animation: confettiFall 3s ease-out forwards;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* =============================================
+   SLASH OVERLAY - LIGHTNING EFFECT
+   ============================================= */
+
 .slash-overlay {
     position: fixed;
     top: 0;
@@ -675,7 +1339,7 @@ body {
 }
 
 .slash-line {
-    stroke-width: 6;
+    stroke-width: 4;
     stroke-linecap: round;
     fill: none;
     filter: url(#slashGlow);
@@ -701,7 +1365,30 @@ body {
     }
 }
 
-/* Mobile Responsive */
+/* Lightning Branches */
+.lightning-branch {
+    stroke-width: 2;
+    stroke-linecap: round;
+    fill: none;
+    opacity: 0.6;
+    filter: url(#slashGlow);
+    animation: branchFlash 0.2s ease-out forwards;
+}
+
+@keyframes branchFlash {
+    0% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* =============================================
+   MOBILE RESPONSIVE
+   ============================================= */
+
 @media (max-width: 600px) {
     :root {
         --stick-height: 50px;
@@ -763,6 +1450,22 @@ body {
         padding: 1rem;
         gap: 12px;
     }
+
+    .game-controls {
+        gap: 0.5rem;
+    }
+
+    .control-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.7rem;
+    }
+
+    .sound-toggle {
+        width: 38px;
+        height: 38px;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
 }
 
 @media (max-width: 400px) {
@@ -783,7 +1486,44 @@ body {
     }
 }
 
-/* Utility Classes */
+/* =============================================
+   TOUCH FEEDBACK (MOBILE UX)
+   ============================================= */
+
+@media (hover: none) and (pointer: coarse) {
+    .stick {
+        animation: none;
+    }
+
+    .stick:active {
+        transform: scale(0.95);
+        box-shadow: 0 0 20px var(--current-glow);
+    }
+
+    .control-btn:active,
+    .mode-btn:active,
+    .config-btn:active {
+        transform: scale(0.95);
+    }
+}
+
+/* =============================================
+   UTILITY CLASSES
+   ============================================= */
+
 .hidden {
     display: none !important;
+}
+
+/* Visually Hidden (Accessibility) */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }

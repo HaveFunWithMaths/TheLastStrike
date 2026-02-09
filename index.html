@@ -3,31 +3,39 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Last Strike</title>
-    <meta name="description"
-        content="A neon-noir strategy game where the player who takes the last stick wins. Challenge the perfect AI opponent.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>The Last Strike - Neon Strategy Game</title>
+    <meta name="description" content="A neon-noir strategy game where the player who takes the last stick wins.">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <!-- Ambient Background -->
+    <!-- Atmospheric Background Layers -->
+    <div class="grid-overlay"></div>
+    <div class="noise-overlay"></div>
+    <div class="scanlines"></div>
+    <div class="particles-container" id="particlesContainer"></div>
+    <div class="bokeh-container" id="bokehContainer"></div>
     <div class="ambient-glow" id="ambientGlow"></div>
+    <div class="explosion-container" id="explosionContainer"></div>
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- Sound Toggle -->
+    <button class="sound-toggle" id="soundToggle" aria-label="Toggle Sound">🔊</button>
 
     <!-- Main Game Container -->
-    <div class="game-container">
-        <!-- Header -->
+    <div class="game-container" id="gameContainer">
         <header class="game-header">
             <h1 class="game-title">THE LAST STRIKE</h1>
-            <p class="game-subtitle">Take the last stick to win</p>
+            <p class="game-subtitle" id="gameSubtitle">Take the last stick to win</p>
         </header>
 
         <!-- Configuration Panel -->
         <div class="config-panel" id="configPanel">
-            <!-- Instructions Section -->
             <div class="instructions-section">
                 <h2 class="instructions-title">HOW TO PLAY</h2>
                 <div class="instructions-content">
@@ -37,8 +45,7 @@
                     </div>
                     <div class="instruction-item">
                         <span class="instruction-number">2</span>
-                        <p><strong>Hover</strong> & <strong>Click</strong> over sticks to select how many to strike (1
-                            to M)</p>
+                        <p><strong>Hover</strong> & <strong>Click</strong> sticks to select (1 to M)</p>
                     </div>
                     <div class="instruction-item">
                         <span class="instruction-number">3</span>
@@ -48,11 +55,7 @@
                 <p class="instruction-tip">💡 <em>Tip: The AI plays perfectly. Can you find the winning strategy?</em>
                 </p>
             </div>
-
-            <!-- Divider -->
             <div class="config-divider"></div>
-
-            <!-- Configuration Controls -->
             <div class="config-row">
                 <div class="config-item">
                     <label for="totalSticksInput">STICKS (N)</label>
@@ -71,7 +74,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Player Names -->
             <div class="config-row">
                 <div class="config-item">
                     <label for="player1Name">PLAYER 1 NAME</label>
@@ -86,32 +88,38 @@
                 <button class="mode-btn active" data-mode="pvai">VS AI</button>
                 <button class="mode-btn" data-mode="pvp">VS PLAYER</button>
             </div>
+            <div class="misere-toggle" id="misereToggle">
+                <label for="misereMode">MISÈRE MODE</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="misereMode">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span class="misere-warning">⚠️ Last stick LOSES!</span>
+            </div>
+            <p class="misere-description" id="misereDescription">
+                <em>In Misère Mode, the player who strikes the last stick <strong>LOSES</strong> instead of
+                    winning!</em>
+            </p>
             <button class="start-btn" id="startBtn">INITIATE</button>
         </div>
 
         <!-- Game Arena -->
         <div class="game-arena" id="gameArena">
-            <!-- Turn Indicator -->
             <div class="turn-indicator" id="turnIndicator">
                 <span class="turn-label">TURN</span>
                 <span class="turn-player" id="turnPlayer">PLAYER 1</span>
+                <div class="game-mode-indicator" id="gameModeIndicator"></div>
             </div>
-
-            <!-- Sticks Box (border indicates turn) -->
             <div class="sticks-box" id="sticksBox">
-                <div class="sticks-container" id="sticksContainer">
-                    <!-- Sticks will be rendered as divs here -->
-                </div>
+                <div class="sticks-container" id="sticksContainer"></div>
             </div>
-
-            <!-- Remaining Counter -->
             <div class="remaining-counter">
                 <span class="remaining-label">REMAINING</span>
                 <span class="remaining-value" id="remainingValue">20</span>
             </div>
-
-            <!-- Game Controls -->
             <div class="game-controls">
+                <button class="control-btn undo-btn" id="undoBtn" disabled>↶ UNDO</button>
+                <button class="control-btn redo-btn" id="redoBtn" disabled>REDO ↷</button>
                 <button class="control-btn" id="homeBtn">HOME</button>
                 <button class="control-btn" id="resetBtn">RESET</button>
             </div>
@@ -120,8 +128,9 @@
         <!-- Game Over Overlay -->
         <div class="game-over-overlay" id="gameOverOverlay">
             <div class="game-over-content">
+                <div class="trophy-icon" id="trophyIcon">🏆</div>
                 <h2 class="winner-text" id="winnerText">PLAYER 1 WINS</h2>
-                <p class="game-over-subtitle">The last strike was decisive</p>
+                <p class="game-over-subtitle" id="gameOverSubtitle">The last strike was decisive</p>
                 <button class="play-again-btn" id="playAgainBtn">PLAY AGAIN</button>
             </div>
         </div>
@@ -140,8 +149,8 @@
                 <stop offset="50%" style="stop-color:#ff006e;stop-opacity:1" />
                 <stop offset="100%" style="stop-color:#ff006e;stop-opacity:0" />
             </linearGradient>
-            <filter id="slashGlow">
-                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+            <filter id="slashGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="6" result="coloredBlur" />
                 <feMerge>
                     <feMergeNode in="coloredBlur" />
                     <feMergeNode in="SourceGraphic" />
