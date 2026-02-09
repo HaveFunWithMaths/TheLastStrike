@@ -371,7 +371,7 @@ function handleMisereToggle() {
         dom.gameSubtitle.textContent = '⚠️ Strike the last stick and LOSE!';
         dom.gameSubtitle.style.color = '#ff006e';
     } else {
-        dom.gameSubtitle.textContent = 'Take the last stick to win';
+        dom.gameSubtitle.textContent = 'Strike the last stick to win';
         dom.gameSubtitle.style.color = '';
     }
 
@@ -611,19 +611,36 @@ function updateTurnIndicator() {
 // =============================================
 
 function calculateAIMove() {
-    const modValue = state.maxMove + 1;
-    const remainder = state.remainingSticks % modValue;
+    const N = state.remainingSticks;
+    const M = state.maxMove;
+    const mod = M + 1;
+
+    // Helper for random move in losing positions
+    const getRandomMove = () => {
+        const feasibleMax = Math.min(N, M);
+        return Math.floor(Math.random() * feasibleMax) + 1;
+    };
 
     if (state.misereMode) {
-        // Misère mode: want to leave opponent with 1 stick
-        if (state.remainingSticks === 1) return 1;
-        if (remainder === 1) return 1; // Force opponent to take last
-        if (remainder === 0) return state.maxMove;
-        return remainder - 1 || 1;
+        // Misère Mode: Losing condition is N % (M+1) == 1
+        const remainder = (N - 1) % mod;
+
+        if (N === 1) return 1;
+
+        if (remainder === 0) {
+            return getRandomMove();
+        } else {
+            return remainder;
+        }
     } else {
-        // Normal mode
-        if (remainder === 0) return 1;
-        return remainder;
+        // Normal Mode: Losing condition is N % (M+1) == 0
+        const remainder = N % mod;
+
+        if (remainder === 0) {
+            return getRandomMove();
+        } else {
+            return remainder;
+        }
     }
 }
 
