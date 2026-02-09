@@ -243,6 +243,7 @@ function startGame() {
 
     // Render sticks
     renderSticks();
+    updateStickStates(); // Initial visual lock
     updateTurnIndicator();
 }
 
@@ -257,7 +258,9 @@ function resetGame() {
     dom.remainingValue.textContent = state.remainingSticks;
     dom.gameOverOverlay.classList.remove('active');
 
+    // Render sticks
     renderSticks();
+    updateStickStates();
     updateTurnIndicator();
 }
 
@@ -356,6 +359,23 @@ function executeAIMove() {
 // STICK RENDERING (Grid Layout with Groups of 5)
 // =============================================
 
+function updateStickStates() {
+    // Visually lock sticks beyond maxMove
+    const stickElements = dom.sticksContainer.querySelectorAll('.stick');
+    let activeIndex = 0;
+
+    for (let i = 0; i < state.sticks.length; i++) {
+        if (state.sticks[i]) {
+            activeIndex++;
+            if (activeIndex > state.maxMove) {
+                stickElements[i].classList.add('locked');
+            } else {
+                stickElements[i].classList.remove('locked');
+            }
+        }
+    }
+}
+
 function renderSticks() {
     dom.sticksContainer.innerHTML = '';
 
@@ -419,10 +439,16 @@ function handleStickHover(index) {
         if (state.sticks[i]) positionInActive++;
     }
 
-    // If hovering beyond maxMove, only highlight maxMove sticks
-    // positionInActive is effectively "how many sticks from start to here"
-    const highlightCount = Math.min(positionInActive, state.maxMove);
-    highlightSticks(highlightCount);
+    // Strict Input Validation:
+    // If hovering a stick that represents a move > maxMove (e.g. 5th stick when M=3),
+    // do NOT highlight anything. It is an invalid move.
+    if (positionInActive > state.maxMove) {
+        clearHighlights();
+        return;
+    }
+
+    // Valid move -> Highlight exactly positionInActive sticks
+    highlightSticks(positionInActive);
 }
 
 function highlightSticks(count) {
@@ -531,6 +557,7 @@ function strikeSticks(indices) {
             state.isAnimating = false;
             clearHighlights();
             switchTurn();
+            updateStickStates(); // Update locked visuals for new turn (if relevant)
         }
     }, 150 + indices.length * 30);
 }

@@ -507,10 +507,21 @@ body {
     }
 }
 
+/* Locked/Invalid Sticks (beyond M) */
+.stick.locked {
+    opacity: 0.3;
+    pointer-events: none;
+    cursor: not-allowed;
+    stroke: var(--text-muted);
+    /* Fallback */
+    background: var(--text-secondary);
+    /* Fallback for div */
+}
+
 .stick.disabled {
     background: var(--text-muted);
     opacity: 0.2;
-    cursor: not-allowed;
+    cursor: default;
     pointer-events: none;
 }
 
